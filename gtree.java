@@ -40,6 +40,136 @@ public class gtree {
         return root;
     }
 
+    public static int max(Node root) {
+    
+        int mx = -(int)1e9;
+        
+        for(Node child : root.children) {
+            mx = Math.max(mx, max(child));
+        }
+        
+        return Math.max(mx, root.data);
+      }
+
+
+    //height in terms of edges 
+    public static int height(Node root) {
+        int ht = -1;
+        
+        for(Node child : root.children) {
+            int cht = height(child);
+            ht = Math.max(cht, ht);
+        }
+        
+        return ht + 1;
+      } 
+    
+    //height in terms of nodes  
+    public static int height01(Node root) {
+        int ht = 0;
+        
+        for(Node child : root.children) {
+            int cht = height01(child);
+            ht = Math.max(cht, ht);
+        }
+        
+        return ht + 1;
+      }   
+
+
+    //level order traversal using queue method
+    public static void levelOrder(Node node){
+        Queue<Node> q = new ArrayDeque<>();
+        q.add(node);
+        
+        while(q.size() != 0) {
+            
+            int sz = q.size(); 
+            while(sz-->0) {
+                //remove
+                Node rm = q.remove();
+            
+                //work
+                System.out.print(rm.data + " ");
+            
+                //add children
+                for(Node child : rm.children) {
+                    q.add(child);
+                }   
+            }
+        }
+        
+        System.out.println(".");
+    }
+    
+    public static void levelOrder01(Node node) {
+
+    }
+
+
+    //level order linewise using queue
+    public static void levelOrderLinewise(Node node){
+        Queue<Node> q = new ArrayDeque<>();
+        q.add(node);
+        
+        while(q.size() != 0) {
+            int sz = q.size();
+            while(sz-->0) {
+                Node rm = q.remove();
+                
+                System.out.print(rm.data + " ");
+                
+                for(Node child : rm.children) {
+                    q.add(child);
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    //level order linewise zig zag using two stacks
+    public static void levelOrderLinewiseZZ(Node node){
+        Stack<Node> s1 = new Stack<>();
+        Stack<Node> s2 = new Stack<>();
+        
+        s1.push(node);
+        
+        int lvl = 0;
+        while(s1.size() != 0){
+            
+            if(lvl % 2 == 0) {
+                while(s1.size() != 0) {
+                    Node rm = s1.pop();
+                    
+                    System.out.print(rm.data + " ");
+                    
+                    for(Node child : rm.children) {
+                        s2.push(child);
+                    }
+                }
+                lvl++;
+            } else {
+                while(s1.size() != 0) {
+                    Node rm = s1.pop();
+                    
+                    System.out.print(rm.data + " ");
+                    
+                    for(int i = rm.children.size() - 1; i >= 0; i--) {
+                        s2.push(rm.children.get(i));
+                    }
+                }
+                
+                lvl++;
+            }
+            
+            if(s2.size() > 0) {
+                System.out.println();
+                s1 = s2;
+                s2 = new Stack<>();
+            }
+        }
+      }
+
     public static void printTree(Node root) {
         if(root != null) {
             System.out.print(root.data + ": ");
