@@ -12,6 +12,14 @@ public class gtree {
         }
     }
 
+    public static int size(Node root) {
+        int sz = 1;
+        for(Node child : root.children) {
+            sz += size(child);
+        }
+        return sz;
+    }
+
     public static Node construct(int[] arr) {
         Stack<Node> st = new Stack<>();
         
