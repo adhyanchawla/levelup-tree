@@ -168,7 +168,33 @@ public class gtree {
                 s2 = new Stack<>();
             }
         }
-      }
+    }
+
+
+    //mirror of generic tree
+    public static void swap(ArrayList<Node> children, int si, int ei) {
+      
+        while(si <= ei) {
+            Node n1 = children.get(si);
+            Node n2 = children.get(ei);
+            
+            children.set(si, n2);
+            children.set(ei, n1);
+            
+            si++;
+            ei--;
+        }
+    }
+    
+  
+    public static void mirror(Node node){
+          
+          swap(node.children, 0, node.children.size() - 1);
+          
+          for(Node child : node.children) {
+              mirror(child);
+          }
+    }
 
     public static void printTree(Node root) {
         if(root != null) {
