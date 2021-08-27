@@ -196,6 +196,43 @@ public class gtree {
           }
     }
 
+    public static Node getLastChild(Node node) {
+        for(int i = node.children.size() - 1; i >= 0; i--) {
+            if(node.children.size() != 0)
+            node = node.children.get(i);
+        }
+        
+        return node;
+    }
+    
+    //linearize in O(N*N)
+    public static void linearize(Node node){
+      for(int i = node.children.size() - 2; i >= 0; i--) {
+          Node slc = getLastChild(node.children.get(i));
+          Node lc = node.children.get(i + 1);
+          node.children.remove(lc);
+          slc.children.add(lc);
+      }
+      
+      for(Node child : node.children) {
+          linearize(child);
+      }
+    }
+
+    public static Node linearize01(Node node) {
+        if(node.children.size() == 0) return node;
+    
+        Node otail = linearize01(node.children.get(node.children.size() - 1));
+        
+        for(int i = node.children.size() - 2; i >= 0; i--) {
+            Node slkitail = linearize01(node.children.get(i));
+            slkitail.children.add(node.children.get(i + 1));
+            node.children.remove(i + 1);
+        }
+        
+        return otail;
+    }
+
     public static void printTree(Node root) {
         if(root != null) {
             System.out.print(root.data + ": ");
