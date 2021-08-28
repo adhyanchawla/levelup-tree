@@ -292,6 +292,27 @@ public class gtree {
         return ans1.get(i1 + 1);
       } 
 
+    public static int floorNum(Node node, int ub) {
+        int maxRes = -(int)1e9;
+        for(Node child : node.children) {
+            int recAns = floorNum(child, ub);
+            maxRes = Math.max(maxRes, recAns);
+        }
+        
+        return node.data < ub ? Math.max(node.data, maxRes) : maxRes;
+    }
+    
+
+    //kth largest in a tree
+    public static int kthLargest(Node node, int k){
+      int ub = (int)1e9;
+      for(int i = 0; i < k; i++) {
+          ub = floorNum(node, ub);
+      }
+      
+      return ub;
+    }  
+
     public static void printTree(Node root) {
         if(root != null) {
             System.out.print(root.data + ": ");
@@ -306,6 +327,70 @@ public class gtree {
         for(Node child : root.children) {
             printTree(child);
         }
+    }
+
+
+    //find max sum subtree using pair class
+    public static class Pair {
+        int sum = 0;
+        int mst = 0;
+        Node mssn = null;
+        Pair(int sum, int mst, Node mssn) {
+            this.sum = sum;
+            this.mst = mst;
+            this.mssn = mssn;
+        }
+    }
+    
+    public static Pair ans(Node node) {
+        Pair myAns = new Pair(0, -(int)1e9, null);
+        myAns.sum = node.data;
+        
+        for(Node child : node.children) {
+            Pair cp = ans(child);
+            
+            myAns.sum += cp.sum;
+            if(cp.mst > myAns.mst) {
+                myAns.mst = cp.mst;
+                myAns.mssn = cp.mssn;
+            }
+        }
+        
+        //myAns.sum += node.data;
+        
+        if(myAns.sum > myAns.mst) {
+            myAns.mst = myAns.sum;
+            myAns.mssn = node;
+        }
+        
+        return myAns;
+    }
+
+    //max subtree sum
+    //using static 
+    public static int mst;
+    public static Node mssn;
+    public static int subTreeSum(Node node) {
+        int sum = 0;
+
+        for(Node child : node.children) {
+            int chsts = subTreeSum(child);
+
+            sum += chsts;
+        }
+
+        if(mst > sum) {
+            mst = sum;
+            mssn = node;
+        }
+
+        return sum;
+    }
+
+    public static int maxSubTreeSum(Node node) {
+        mst = -(int)1e9;
+        mssn = null;
+        return subTreeSum(node);
     }
     public static void main(String[] args) {
         int[] arr = {10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 110, -1, 120, -1, -1, 90, -1, -1, 40, 100, -1, -1, -1};
