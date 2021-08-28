@@ -233,6 +233,65 @@ public class gtree {
         return otail;
     }
 
+
+    //find 
+    public static boolean find(Node node, int data) {
+        //apne mei check krega  
+        if(node.data == data) {
+            return true;
+        }
+        
+        boolean ans = false;
+        for(Node child : node.children) {
+            //child se puchega
+            ans = find(child, data);
+            //agar mila, toh true
+            if(ans) return true;
+        }
+        
+        //mere se ni match kiya, mere child se ni match kiya then false
+        return false;
+      }
+
+
+      //node to root path
+      public static ArrayList<Integer> nodeToRootPath(Node node, int data){
+        if(node.data == data) {
+            ArrayList<Integer> base = new ArrayList<>();
+            base.add(node.data);
+            return base;
+        }
+        
+        ArrayList<Integer> ans = new ArrayList<>();
+        
+        for(Node child : node.children) {
+            ans = nodeToRootPath(child, data);
+            if(ans.size() > 0) {
+                ans.add(node.data);
+                return ans;
+            }
+        }
+        
+        return new ArrayList<>();
+     }
+     
+
+     //lca of generic tree
+     public static int lca(Node node, int d1, int d2) {
+        ArrayList<Integer> ans1 = nodeToRootPath(node, d1);
+        ArrayList<Integer> ans2 = nodeToRootPath(node, d2);
+        
+        int i1 = ans1.size() - 1;
+        int i2 = ans2.size() - 1;
+        
+        while(i1 >= 0 && i2 >= 0 && ans1.get(i1) == ans2.get(i2)) {
+            i1--;
+            i2--;
+        }
+        
+        return ans1.get(i1 + 1);
+      } 
+
     public static void printTree(Node root) {
         if(root != null) {
             System.out.print(root.data + ": ");
