@@ -392,6 +392,62 @@ public class gtree {
         mssn = null;
         return subTreeSum(node);
     }
+    //diameter
+    public static int dia;
+
+    public static int diameter(Node node) {
+        int max = -1;
+        int smax = -1;
+
+        for(Node child : node.children) {
+            int cht = diameter(child);
+
+            if(cht > max) {
+                smax = max;
+                max = cht;
+            } else if(cht > smax) {
+                smax = cht;
+            }
+        }
+
+        dia = Math.max(dia, max + smax + 2);
+
+        return max + 1;
+    }
+
+
+    public static class DPair {
+        int ht;
+        int dia;
+        
+        DPair(int ht, int dia) {
+            this.ht = ht;
+            this.dia = dia;
+        }
+    }    
+    
+    //using class
+    public static DPair fun(Node node) {
+        DPair mp = new DPair(-1, 0);
+        int ht = -1;
+        int sht = -1;
+        for(Node child : node.children) {
+          DPair cp = fun(child);
+          
+          mp.dia = Math.max(mp.dia, cp.dia);
+          if(cp.ht > ht) {
+              sht = ht;
+              ht = cp.ht;
+          } else{
+              sht = cp.ht;
+          }
+        }
+        
+        mp.dia = Math.max(mp.dia, sht + ht + 2);
+        mp.ht =  ht + 1;
+        return mp;
+    }
+
     public static void main(String[] args) {
         int[] arr = {10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 110, -1, 120, -1, -1, 90, -1, -1, 40, 100, -1, -1, -1};
         Node root = construct(arr);
