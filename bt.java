@@ -15,6 +15,53 @@ public class bt {
     }
 
 
+    // k distance far away
+    public static ArrayList<Node> nodeToRootPath1(Node node, int data){
+      if(node == null) return new ArrayList<>();
+      
+      if(node.data == data) {
+          ArrayList<Node> base = new ArrayList<>();
+          base.add(node);
+          return base;
+      }
+      
+      ArrayList<Node> myAns = new ArrayList<>();
+      
+      myAns = nodeToRootPath1(node.left, data);
+          if(myAns.size() > 0) {
+              myAns.add(node);
+              return myAns;
+          }
+      
+      myAns = nodeToRootPath1(node.right, data);
+          if(myAns.size() > 0) {
+              myAns.add(node);
+              return myAns;
+          }
+      
+      return new ArrayList<>();
+    }
+    
+      public static void printKLevelsDown(Node node, int k, Node blocker){
+      if(node == null || node == blocker || k < 0) return;
+      
+      if(k == 0) {
+          System.out.println(node.data);
+          return;
+      }
+      
+      printKLevelsDown(node.left, k - 1, blocker);
+      printKLevelsDown(node.right, k - 1, blocker);
+    }
+
+    public static void printKNodesFar(Node node, int data, int k) {
+      ArrayList<Node> ans = nodeToRootPath1(node, data);
+      for(int i = 0; i < ans.size(); i++) {
+          printKLevelsDown(ans.get(i), k - i, i != 0 ? ans.get(i - 1) : null);
+      }
+    }
+
+
     //in order to calculate the tilt of a binary tree we need left subtree sum and right subtree sum
     //tilt of a node will be absolute diff of ltilt and rtilt
     //tilt of a tree will be sum of all the tilts obtained
