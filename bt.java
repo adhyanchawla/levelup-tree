@@ -23,6 +23,158 @@ public class bt {
         }
     }
 
+  static int dia = 0;
+  public static int diameter1(Node node) {
+    int maxht = -1;
+    int smaxht = -1;
+    if(node == null) return -1;
+    
+    int cht = diameter1(node.left);
+    if(cht > maxht) {
+        smaxht = maxht;
+        maxht = cht;
+    } else if(cht > smaxht) {
+        smaxht = cht;
+    }
+    
+    int cht1 = diameter1(node.right);
+    if(cht1 > maxht) {
+        smaxht = maxht;
+        maxht = cht1;
+    } else if(cht1 > smaxht) {
+        smaxht = cht1;
+    }
+    
+    dia = Math.max(dia, maxht + smaxht + 2);
+    
+    return maxht + 1;
+  }
+  
+  
+  public static class DiaPair {
+    int dia;
+    int ht;
+    
+    DiaPair(int dia, int ht) {
+        this.dia = dia;
+        this.ht = ht;
+    }
+}
+
+//diameter of binary tree
+public static DiaPair fun(Node node) {
+    
+    int maxht = -1;
+    int smaxht = -1;
+    if(node == null) {
+        DiaPair mp = new DiaPair(0, -1);
+        return mp;
+    }
+    
+    DiaPair lp = fun(node.left);
+    if(lp.ht > maxht) {
+        smaxht = maxht;
+        maxht = lp.ht;
+    } else {
+        smaxht = lp.ht;
+    }
+    
+    DiaPair rp = fun(node.right);
+    if(rp.ht > maxht) {
+        smaxht = maxht;
+        maxht = rp.ht;
+    } else {
+        smaxht = rp.ht;
+    }
+    
+    DiaPair mp = new DiaPair(0, -1);
+    mp.dia = Math.max(mp.dia, maxht + smaxht + 2);
+    mp.ht = maxht + 1;
+    return mp;
+}
+
+
+    //remove leaves
+    public static Node removeLeaves(Node node){
+      if(node == null) return null;
+      
+      if(node.left == null && node.right == null) {
+          return null;
+      }
+      
+      //to take the changes place, actually perform the changes
+      node.left = removeLeaves(node.left);
+      node.right = removeLeaves(node.right);
+      
+          
+      return node;    
+    }
+
+
+    //transform back to original tree 
+    public static Node transBackFromLeftClonedTree(Node node){
+      if(node == null) return null;
+      
+      Node left = transBackFromLeftClonedTree(node.left.left);
+      Node right = transBackFromLeftClonedTree(node.right);
+      
+      node.left = node.left.left;
+      
+      return node;
+    }
+
+
+    //print single child nodes
+    public static void printSingleChildNodes(Node node){
+      if(node == null) return;
+      
+      if((node.left == null && node.right != null)) {
+          System.out.println(node.right.data);
+          return;
+      }
+      
+      if(node.left != null && node.right == null) {
+          System.out.println(node.left.data);
+          return;
+      }
+      
+      printSingleChildNodes(node.left);
+      printSingleChildNodes(node.right);
+      
+    }
+
+    //create left clone of a tree
+    public static Node createLeftCloneTree(Node node){
+      if(node == null) return null;
+      
+      Node left = createLeftCloneTree(node.left);
+      Node right = createLeftCloneTree(node.right);
+      
+      Node nn = new Node(node.data, null, null);
+      Node lft = node.left;
+      node.left = nn;
+      nn.left = lft;
+      
+      return node;
+    }
+
+    //path from root to leaves sum within a range
+    public static void pathToLeafFromRoot(Node node, String path, int sum, int lo, int hi){
+    
+      if(node == null) return;
+      
+      if(node.left == null && node.right == null) {
+          sum += node.data;
+          path += node.data + " ";
+          if(sum >= lo && sum <= hi)
+          System.out.println(path); 
+          //return;
+      }
+      
+      pathToLeafFromRoot(node.left, path + node.data + " ", sum + node.data, lo, hi);
+      pathToLeafFromRoot(node.right, path + node.data + " ", sum + node.data, lo, hi);
+    }
+
 
     //print k levels down
     public static void printKLevelsDown(Node node, int k){
