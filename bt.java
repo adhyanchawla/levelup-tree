@@ -14,6 +14,25 @@ public class bt {
         }
     }
 
+
+    //in order to calculate the tilt of a binary tree we need left subtree sum and right subtree sum
+    //tilt of a node will be absolute diff of ltilt and rtilt
+    //tilt of a tree will be sum of all the tilts obtained
+    //hum kuch aur nikaalre and return kuch aur kr rhe
+    static int tilt = 0;
+    public static int tilt(Node node){
+      // write your code here to set the tilt data member
+      if(node == null) return 0;
+      int lst = 0; //left subtree sum
+      int rst = 0; //right subtree sum
+      lst += tilt(node.left); //sum of all lst
+      rst += tilt(node.right); //sum of all rst
+      
+      tilt += Math.abs(lst - rst); //tilt of a tree = tilt of all the nodes
+      
+      return lst + rst + node.data; //we return subtree sum
+    }
+
     public static class Pair {
         Node node;
         int state; 
@@ -22,6 +41,33 @@ public class bt {
           this.state = state;
         }
     }
+  
+    
+  //tilt of binary tree using pair class   
+  public static class TiltPair {
+      int tilt;
+      int st;
+      
+      TiltPair(int tilt, int st) {
+          this.tilt = tilt;
+          this.st = st;
+      }
+  }
+  
+  public static TiltPair fun1(Node node) {
+      if(node == null) return new TiltPair(0, 0);
+      
+      TiltPair lp = fun1(node.left);
+      TiltPair rp = fun1(node.right);
+      
+      TiltPair mp = new TiltPair(0, 0);
+      
+      mp.st = lp.st + rp.st + node.data; //poore tree ka subtree sum
+                //mera tilt               //left ka tilt // right ka tilt
+      mp.tilt = Math.abs(lp.st - rp.st) + lp.tilt + rp.tilt; //poore tree ka tilt
+      
+      return mp;
+  }  
 
   static int dia = 0;
   public static int diameter1(Node node) {
