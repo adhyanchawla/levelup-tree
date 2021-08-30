@@ -13,7 +13,105 @@ public class bt {
             this.right = right;
         }
     }
+
+    public static class Pair {
+        Node node;
+        int state; 
+        Pair(Node node, int state) {
+          this.node = node;
+          this.state = state;
+        }
+    }
+
+
+    //print k levels down
+    public static void printKLevelsDown(Node node, int k){
+      if(node == null) return;
+      
+      if(k == 0) {
+          if(node != null) {
+              System.out.println(node.data);
+          }
+          return;
+      }
+      
+      printKLevelsDown(node.left, k - 1);
+      printKLevelsDown(node.right, k - 1);
+    }
+
+
+    //node to root path and find
+    public static boolean find(Node node, int data){
+      if(node == null) return false;
+      
+      if(node.data == data) return true;
+      
+      boolean ans = false;
+      
+      ans = ans || find(node.left, data);
+      ans = ans || find(node.right, data);
+      
+      return ans;
+    }
+  
+    public static ArrayList<Integer> nodeToRootPath(Node node, int data){
+      if(node == null) return new ArrayList<>();
+      
+      if(node.data == data) {
+          ArrayList<Integer> base = new ArrayList<>();
+          base.add(data);
+          return base;
+      }
+      
+      ArrayList<Integer> myAns = new ArrayList<>();
+      
+      myAns = nodeToRootPath(node.left, data);
+          if(myAns.size() > 0) {
+              myAns.add(node.data);
+              return myAns;
+          }
+      
+      myAns = nodeToRootPath(node.right, data);
+          if(myAns.size() > 0) {
+              myAns.add(node.data);
+              return myAns;
+          }
+      
+      return new ArrayList<>();
+    }
+
+
+    //traversals using stack ds
+    public static void iterativePrePostInTraversal(Node node) {
+      Stack<Pair> st = new Stack<>();
+      st.push(new Pair(node, 0));
+      String pre = "";
+      String in = "";
+      String post = "";
+      
+      while(st.size() != 0) {
+          Pair top = st.peek();
+          if(top.state == 0) {
+              pre += top.node.data + " ";
+              top.state++;
+              if(top.node.left != null) st.push(new Pair(top.node.left, 0));
+          } else if(top.state == 1) {
+              in += top.node.data + " ";
+              top.state++;
+              if(top.node.right != null) st.push(new Pair(top.node.right, 0));
+          } else if(top.state == 2) {
+              post += top.node.data + " ";
+              st.pop();
+          }
+      }
+      
+          System.out.println(pre);
+          System.out.println(in);
+          System.out.println(post);
+    }
     
+
+    //basic functions
     public static int size(Node node) {
         if(node == null) return 0;
         
