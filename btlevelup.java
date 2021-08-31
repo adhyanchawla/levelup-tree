@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class btlevelup {
 
     public static class TreeNode {
@@ -82,4 +84,59 @@ public class btlevelup {
     public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
         return buildTree2(preorder, 0, preorder.length - 1, postorder, 0, postorder.length - 1);
     }
+
+    //interview pov se imp
+    //construct BT from inorder and levelorder
+
+
+    public static TreeNode buildTree4(int inord[], int level[])
+    {
+        map = new HashMap<>();
+        
+        for(int i = 0; i < inord.length; i++) {
+            map.put(inord[i], i);
+        }
+        
+        return buildTree3(inord, 0, inord.length - 1, level);
+        //your code here
+    }
+    
+    public static void extract(int idx, int[] level, int[] llo, int[] rlo) {
+        
+        int j = 0, k = 0;
+        for(int i = 1; i < level.length; i++) {
+            int in = map.get(level[i]);
+            
+            if(in < idx) {
+                llo[j++] = level[i];
+            } else if(in > idx) {
+                rlo[k++] = level[i];
+            }
+        }
+    }
+    
+    public static HashMap<Integer, Integer> map;
+    public static TreeNode buildTree3(int[] inord, int is, int ie, int[] level) {
+        
+        if(is > ie) return null;
+        
+        
+        TreeNode node = new TreeNode(level[0]);
+        
+        int idx = map.get(level[0]);
+        
+        int colse = idx - is;
+        int corse = ie - idx;
+        
+        int []llo = new int[colse];
+        int []rlo = new int[corse];
+        
+        extract(idx, level, llo, rlo);
+        
+        node.left = buildTree3(inord, is, idx - 1, llo);
+        node.right = buildTree3(inord, idx + 1, ie, rlo);
+        
+        return node;
+    }
+
 }
