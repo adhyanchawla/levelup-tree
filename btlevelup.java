@@ -143,4 +143,23 @@ public class btlevelup {
         return node;
     }
 
+
+    //construct BST from sorted array
+    public static TreeNode buildTree(int[] nums, int si, int ei) {
+        if(si > ei) return null;
+        
+        int mid = (si + ei) / 2;
+        
+        TreeNode root = new TreeNode(nums[mid]);
+        
+        root.left = buildTree(nums, si, mid - 1);
+        root.right = buildTree(nums, mid + 1, ei);
+        
+        return root;
+    }
+    
+    public static TreeNode sortedArrayToBST(int[] nums) {
+        return buildTree(nums, 0, nums.length - 1);
+    }
+
 }
