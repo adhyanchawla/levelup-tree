@@ -85,10 +85,10 @@ public class btlevelup {
         return buildTree2(preorder, 0, preorder.length - 1, postorder, 0, postorder.length - 1);
     }
 
+
+
     //interview pov se imp
     //construct BT from inorder and levelorder
-
-
     public static TreeNode buildTree4(int inord[], int level[])
     {
         map = new HashMap<>();
@@ -101,12 +101,15 @@ public class btlevelup {
         //your code here
     }
     
+    //O(N)
+    //extract the elements of small left level order and small right level order
     public static void extract(int idx, int[] level, int[] llo, int[] rlo) {
         
         int j = 0, k = 0;
         for(int i = 1; i < level.length; i++) {
-            int in = map.get(level[i]);
+            int in = map.get(level[i]); //using map extract index of elements of level order
             
+            //by comparing the index values place the elements in small level order arrays
             if(in < idx) {
                 llo[j++] = level[i];
             } else if(in > idx) {
@@ -116,6 +119,7 @@ public class btlevelup {
     }
     
     public static HashMap<Integer, Integer> map;
+    //O(nh) h in worst case h = n, else O(nlogn), space: O(n)
     public static TreeNode buildTree3(int[] inord, int is, int ie, int[] level) {
         
         if(is > ie) return null;
@@ -123,13 +127,13 @@ public class btlevelup {
         
         TreeNode node = new TreeNode(level[0]);
         
-        int idx = map.get(level[0]);
+        int idx = map.get(level[0]); //idx obtained from inorder idx of hashmap
         
-        int colse = idx - is;
-        int corse = ie - idx;
+        int colse = idx - is; //count of left subtree elements
+        int corse = ie - idx; //count of right subtree elements
         
-        int []llo = new int[colse];
-        int []rlo = new int[corse];
+        int []llo = new int[colse]; //make left level order array
+        int []rlo = new int[corse]; //make right level order array
         
         extract(idx, level, llo, rlo);
         
