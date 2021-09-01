@@ -163,6 +163,8 @@ public class btlevelup {
     }
 
 
+    //method 1
+    //using static keyword
     //construct BST from preorder traversal
     //lr : left range rr : right range
     //we have used BST property
@@ -181,6 +183,93 @@ public class btlevelup {
     public static TreeNode bstFromPreorder(int[] preorder) {
         idx = 0;
         return buildTree6(preorder, -(int)1e9, (int)1e9);
+    }
+
+
+    //method 2
+    //without using static
+    public static TreeNode buildTree7(int[] preorder, int lr, int rr, int[] in) {
+        if(in[0] >= preorder.length || preorder[in[0]] < lr || preorder[in[0]] > rr) return null;
+        else {
+            TreeNode root = new TreeNode(preorder[in[0]++]);
+            root.left = buildTree7(preorder, lr, root.val, in);
+            root.right = buildTree7(preorder, root.val, rr, in);
+            return root;
+        }
+    }
+    
+    public static TreeNode bstFromPreorder01(int[] preorder) {
+        int idx = 0;
+        int[] in = new int[1];
+        in[0] = idx;
+        return buildTree7(preorder,-(int)1e9, (int)1e9, in);
+    }
+
+
+    //construct BST from postorder traversal
+    public static TreeNode buildTree8(int[] post, int lr, int rr) {
+        if(i < 0 || post[i] < lr || post[i] > rr){
+            return null;
+        } else {
+            TreeNode root = new TreeNode(post[i--]);
+            root.right = buildTree8(post, root.val, rr); //first right call
+            root.left = buildTree8(post, lr, root.val);
+            return root;
+        }
+    }
+    static int i;
+    public static TreeNode constructTree(int post[],int n)
+    {
+        i = post.length - 1;
+        return buildTree8(post, -(int)1e9, (int)1e9);
+        //Add your code here.
+    }
+
+
+    //construct bst from level order
+    //important: not recursive, used queue
+    public static class Pair {
+        TreeNode par;
+        int lr;
+        int rr;
+        
+        Pair(TreeNode par, int lr, int rr) {
+            this.par = par;
+            this.lr = lr;
+            this.rr = rr;
+        }
+    }
+
+    public static TreeNode constructBSTFromLevelOrder(int[] arr) {
+        
+        Queue<Pair> q = new ArrayDeque<>();
+        TreeNode root = null;
+        q.add(new Pair(root, -(int)1e9, (int)1e9));
+        
+        int idx = 0;
+        while(q.size() > 0 && idx < arr.length) {
+            Pair rm = q.remove();
+            
+            if(rm.lr > arr[idx] || rm.rr < arr[idx]) continue;
+            
+            TreeNode nn = new TreeNode(arr[idx]);
+            idx++;
+            
+            if(rm.par == null) {
+                root = nn;
+            } else {
+                if(rm.par.val > nn.val) {
+                    rm.par.left = nn;
+                } else if(rm.par.val < nn.val) {
+                    rm.par.right = nn;
+                }
+            }
+            
+            q.add(new Pair(nn, rm.lr, nn.val));
+            q.add(new Pair(nn, nn.val, rm.rr));
+        }
+        
+        return root;
     }
 
 }
