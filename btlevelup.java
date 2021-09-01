@@ -162,4 +162,25 @@ public class btlevelup {
         return buildTree(nums, 0, nums.length - 1);
     }
 
+
+    //construct BST from preorder traversal
+    //lr : left range rr : right range
+    //we have used BST property
+    public static TreeNode buildTree6(int[] preorder, int lr, int rr) {
+        if(idx >= preorder.length || preorder[idx] < lr || preorder[idx] > rr) return null;
+        else {
+            TreeNode root = new TreeNode(preorder[idx++]);
+            root.left = buildTree6(preorder, lr, root.val);
+            root.right = buildTree6(preorder, root.val, rr);
+            return root;
+        }
+        
+    }
+    
+    static int idx; //statically created index to iterate over the preorder array
+    public static TreeNode bstFromPreorder(int[] preorder) {
+        idx = 0;
+        return buildTree6(preorder, -(int)1e9, (int)1e9);
+    }
+
 }

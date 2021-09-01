@@ -42,7 +42,7 @@ public class bt {
       return new ArrayList<>();
     }
     
-      public static void printKLevelsDown(Node node, int k, Node blocker){
+    public static void printKLevelsDown(Node node, int k, Node blocker){
       if(node == null || node == blocker || k < 0) return;
       
       if(k == 0) {
