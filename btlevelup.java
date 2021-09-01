@@ -272,4 +272,92 @@ public class btlevelup {
         return root;
     }
 
+
+    //serialize and deserialise a binary tree
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if(root == null) {
+            return "n";
+        }
+        
+        String ls = serialize(root.left);
+        String rs = serialize(root.right);
+        
+        return root.val + " " + ls + " " + rs;
+    }
+    
+    public TreeNode helper(String[] tokens) {
+        if(tokens[idx1].equals("n")) {
+            idx1++;
+            return null;
+        }
+        
+        TreeNode root = new TreeNode(Integer.parseInt(tokens[idx1++]));
+        root.left = helper(tokens);
+        root.right = helper(tokens);
+        
+        return root;
+    }
+
+    // Decodes your encoded data to tree.
+    static int idx1;
+    public TreeNode deserialize(String data) {
+        String[] tokens = data.split(" ");
+        idx1 = 0;
+        return helper(tokens);
+    }
+
+
+    //left view of binary tree
+    public static ArrayList<Integer> leftView(TreeNode root) {
+        if(root == null) return new ArrayList<>();
+        
+        Queue<TreeNode> q = new ArrayDeque<>();
+        
+        ArrayList<Integer> ans = new ArrayList<>();
+        
+        q.add(root);
+        
+        while(q.size() != 0) {
+            int sz = q.size();
+            ans.add(q.peek().val);
+            while(sz-->0) {
+                TreeNode rm = q.remove();
+                
+                if(rm.left != null) q.add(rm.left);
+                if(rm.right != null) q.add(rm.right);
+            }
+        }
+        return ans;
+    }
+
+    //right view of binary tree
+    public static List<Integer> rightSideView(TreeNode root) {
+        if(root == null) return new ArrayList<>();
+        
+        List<Integer> ans = new ArrayList<>();
+        
+        Queue<TreeNode> q = new ArrayDeque<>();
+        q.add(root);
+        
+        while(q.size() != 0) {
+            int sz = q.size();
+            
+            while(sz-->0) {
+                
+                if(sz == 0) {
+                    ans.add(q.peek().val);
+                }
+                
+                TreeNode rm = q.remove();
+                
+                if(rm.left != null) q.add(rm.left);
+                if(rm.right != null) q.add(rm.right);
+            }
+            
+            
+        }
+        
+        return ans;
+    }
 }
