@@ -342,9 +342,7 @@ public class btlevelup {
         
         while(q.size() != 0) {
             int sz = q.size();
-            
-            while(sz-->0) {
-                
+            while(sz-->0) {    
                 if(sz == 0) {
                     ans.add(q.peek().val);
                 }
@@ -353,11 +351,224 @@ public class btlevelup {
                 
                 if(rm.left != null) q.add(rm.left);
                 if(rm.right != null) q.add(rm.right);
-            }
-            
-            
+            }            
         }
         
         return ans;
+    }
+
+    //width of a binary tree
+    public static void helper(TreeNode root, int hl, int[] minmaxhl) {
+        if(root == null) return;
+        
+        helper(root.left, hl - 1, minmaxhl);
+        helper(root.right, hl + 1, minmaxhl);
+        
+        minmaxhl[0] = Math.min(minmaxhl[0], hl);
+        minmaxhl[1] = Math.max(minmaxhl[1], hl);
+            
+    }
+
+    public static int width(TreeNode root) {
+      if(root.left == null && root.right == null) return 1;
+        int[] minmaxhl = new int[2];
+        helper(root, 0, minmaxhl);
+        
+        int minhl = minmaxhl[0];
+        int maxhl = minmaxhl[1];
+        
+        return maxhl - minhl + 1;
+    }
+
+
+    //vertical order of binary tree using hashmap method 1 gfg solution
+        public static class Pair3 {
+        TreeNode node;
+        int hl;
+        int minhl;
+        int maxhl;
+        
+        Pair3() {
+            
+        }
+        
+        Pair3(TreeNode node, int hl, int minhl, int maxhl) {
+            this.node = node;
+            this.hl = hl;
+            this.minhl = minhl;
+            this.maxhl = maxhl;
+        }
+    }
+
+    public static ArrayList<ArrayList<Integer>> verticalOrderTraversal1(TreeNode node) {
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        
+        int minhl = (int)1e9;
+        int maxhl = -(int)1e9;
+        
+        Queue<Pair3> q = new ArrayDeque<>();
+        q.add(new Pair3(node, 0, minhl, maxhl));
+        while(q.size() != 0) {
+            Pair3 rm = q.remove();
+            maxhl = Math.max(rm.hl, maxhl);
+            minhl = Math.min(rm.hl, minhl);
+            
+            if(!map.containsKey(rm.hl)) {
+                ArrayList<Integer> arr = new ArrayList<>();
+                arr.add(rm.node.val);
+                map.put(rm.hl, arr);   
+            } else {
+                ArrayList<Integer> arr = map.get(rm.hl);
+                arr.add(rm.node.val);
+                map.put(rm.hl, arr);
+            }
+            
+            if(rm.node.left != null) {
+                q.add(new Pair3(rm.node.left, rm.hl - 1, minhl, maxhl));
+            }
+            
+            if(rm.node.right != null) {
+                q.add(new Pair3(rm.node.right, rm.hl + 1, minhl, maxhl));
+            }
+        }
+        
+        
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        
+        int count = minhl;
+        while(count <= maxhl) {
+            if(map.containsKey(count)) {
+                ArrayList<Integer> list = map.get(count);
+                ans.add(list);
+            }
+            count++;
+        }
+        return ans;
+
+    }
+
+
+    //method 2 without hashmap
+    //vertical order of binary tree
+    public static class Pair4 {
+        TreeNode node;
+        int hl;
+        
+        Pair4(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+
+
+    public static void helper2(TreeNode root, int hl, int[] minmaxhl) {
+        if(root == null) return;
+        
+        minmaxhl[0] = Math.min(minmaxhl[0], hl);
+        minmaxhl[1] = Math.max(minmaxhl[1], hl);
+        
+        helper2(root.left, hl - 1, minmaxhl);
+        helper2(root.right, hl + 1, minmaxhl);
+        
+    }
+    
+    public static int widthOfTree(TreeNode root, int[] minmaxhl) {
+        helper2(root, 0, minmaxhl);
+        return minmaxhl[1] - minmaxhl[0] + 1;
+    }
+
+    public static ArrayList<ArrayList<Integer>> verticalOrderTraversal(TreeNode root) {
+        
+        int[] minmaxhl = new int[2];
+        int w = widthOfTree(root, minmaxhl);
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        for(int i = 0; i < w; i++) {
+            ans.add(new ArrayList<>());
+        }
+        
+        Queue<Pair4> q = new ArrayDeque<>();
+        
+        int blvl = -minmaxhl[0];
+        q.add(new Pair4(root, blvl));
+        
+        while(q.size() != 0){
+            
+            Pair4 rm = q.remove();
+            
+            ans.get(rm.hl).add(rm.node.val);
+            
+            if(rm.node.left != null) {
+                q.add(new Pair4(rm.node.left, rm.hl - 1));
+            }
+            
+            if(rm.node.right != null) {
+                q.add(new Pair4(rm.node.right, rm.hl + 1));
+            }
+        }
+        
+        return ans;
+    }
+
+
+    //top view of binary tree
+    //
+    public static class Pair5 {
+        TreeNode node;
+        int hl;
+        
+        Pair5(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+    
+    public static void width1(TreeNode node, int hl, int[] maxminhl) {
+        if(node == null) return;
+        
+        width1(node.left, hl - 1, maxminhl);
+        width1(node.right, hl + 1, maxminhl);
+        
+        maxminhl[0] = Math.min(maxminhl[0], hl);
+        maxminhl[1] = Math.max(maxminhl[1], hl);
+    }
+    
+    
+    public static ArrayList<Integer> TopView(TreeNode root)
+    {
+        int[] maxminhl = new int[2];
+        width1(root, 0, maxminhl);
+        
+        int w = maxminhl[1] - maxminhl[0] + 1;
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+    
+        for(int i = 0; i < w; i++) {
+            ans.add(new ArrayList<>());
+        }
+        
+        Queue<Pair5> q = new ArrayDeque<>();
+        int blvl = -maxminhl[0];
+        
+        q.add(new Pair5(root, blvl));
+        
+        while(q.size() != 0) {
+            
+            Pair5 rm = q.remove();
+            
+            int hl = rm.hl;
+            
+            ans.get(hl).add(rm.node.val);
+            
+            if(rm.node.left != null) q.add(new Pair5(rm.node.left, hl - 1));
+            if(rm.node.right != null) q.add(new Pair5(rm.node.right, hl + 1));
+            
+        }
+        
+        ArrayList<Integer> res = new ArrayList<>();
+        
+        for(ArrayList<Integer> list : ans) {
+            res.add(list.get(0));
+        }
+        
+        return res;
     }
 }
