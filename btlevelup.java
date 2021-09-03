@@ -571,4 +571,115 @@ public class btlevelup {
         
         return res;
     }
+
+    //bottom view of binary tree
+    public static class Pair7 {
+        TreeNode node;
+        int hl;
+        
+        Pair7(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+    
+    public static void width(TreeNode root, int hl, int[] minmaxhl) {
+        if(root == null) return;
+        
+        minmaxhl[0] = Math.min(minmaxhl[0], hl);
+        minmaxhl[1] = Math.max(minmaxhl[1], hl);
+        width(root.left, hl - 1, minmaxhl);
+        width(root.right, hl + 1, minmaxhl);
+    }
+    
+    //Function to return a list containing the bottom view of the given tree.
+    public static ArrayList <Integer> BottomView(TreeNode root)
+    {
+        int[] minmaxhl = new int[2];
+        
+        width(root, 0, minmaxhl);
+        int w = minmaxhl[1] - minmaxhl[0] + 1;
+        
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        
+        for(int i = 0; i < w; i++) {
+            ans.add(new ArrayList<>());
+        }
+        
+        Queue<Pair7> q = new ArrayDeque<>();
+        q.add(new Pair7(root, -minmaxhl[0]));
+        // Code here
+        
+        while(q.size() != 0) {
+            Pair7 rm = q.remove();
+            
+            ans.get(rm.hl).add(rm.node.val);
+            
+            if(rm.node.left != null) q.add(new Pair7(rm.node.left, rm.hl - 1));
+            if(rm.node.right != null) q.add(new Pair7(rm.node.right, rm.hl + 1));
+        }
+        
+        ArrayList<Integer> res = new ArrayList<>();
+        
+        for(ArrayList<Integer> list : ans) {
+            res.add(list.get(list.size() - 1));
+        }
+        
+        return res;
+    }
+
+    //diagonal traversal of binary tree
+    public static ArrayList<ArrayList<Integer>> diagonalOrder(TreeNode root) {
+        
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
+        q.add(root);
+        
+        while(q.size() != 0) {
+            int sz = q.size();
+            ArrayList<Integer> list = new ArrayList<>();
+            while(sz-->0) {
+                TreeNode rm = q.remove();
+                while(rm != null) {
+                    if(rm.left != null) {
+                        q.add(rm.left);
+                    }
+                    
+                    list.add(rm.val);
+                    rm = rm.right;
+                }
+            }
+            ans.add(list);
+        }
+        
+        return ans;
+    }
+
+    //diagonal traversal anticlockwise
+    public static ArrayList<ArrayList<Integer>> diagonalOrderAnti(TreeNode root) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
+        q.add(root);
+        
+        while(q.size() != 0) {
+            int sz = q.size();
+            ArrayList<Integer> diag = new ArrayList<>();
+            
+            while(sz-->0) {
+                TreeNode rm = q.remove();
+                while(rm != null) {
+                    
+                    if(rm.right != null){
+                        q.add(rm.right);
+                    }
+                    
+                    diag.add(rm.val);
+                    rm = rm.left;
+                }
+            }
+            ans.add(diag);
+        }
+        
+        return ans;
+    }
 }
