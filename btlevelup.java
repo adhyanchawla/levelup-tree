@@ -509,6 +509,66 @@ public class btlevelup {
         return ans;
     }
 
+    //vertical order of tree leetcode version using Comparable compareTo
+    public class Pair11 implements Comparable<Pair11> {
+        
+        TreeNode node;
+        int x;
+        int y;
+        
+        public Pair11(TreeNode node, int x, int y) {
+            this.node = node;
+            this.x = x;
+            this.y = y;
+        }
+        
+        public int compareTo(Pair11 o) {
+            if(this.y != o.y) return this.y - o.y;
+            else if(this.x != o.x) return this.x - o.x;
+            else return this.node.val - o.node.val;
+        }
+        
+    }
+    
+    public void width(TreeNode root, int hl, int[] minmaxhl) {
+        if(root == null) return;
+        
+        minmaxhl[0] = Math.min(minmaxhl[0], hl);
+        minmaxhl[1] = Math.max(minmaxhl[1], hl);
+        
+        width(root.left, hl - 1, minmaxhl);
+        width(root.right, hl + 1, minmaxhl);
+    }
+    
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        
+        PriorityQueue<Pair11> pq = new PriorityQueue<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        
+        int[] minmaxhl = new int[2];
+        width(root, 0, minmaxhl);
+        
+        int w = minmaxhl[1] - minmaxhl[0] + 1;
+        
+        for(int i = 0; i < w; i++) {
+            ans.add(new ArrayList<>());
+        }
+        
+        pq.add(new Pair11(root, -minmaxhl[0], 0));
+        
+        while(pq.size() != 0) {
+            //List<Integer> ans = new ArrayList<>();
+            Pair11 rm = pq.remove();
+            
+            ans.get(rm.x).add(rm.node.val);
+            
+            if(rm.node.left != null) pq.add(new Pair11(rm.node.left, rm.x - 1, rm.y + 1));
+            if(rm.node.right != null) pq.add(new Pair11(rm.node.right, rm.x + 1, rm.y + 1));
+        }
+        
+        return ans;
+        
+    }
 
     //top view of binary tree
     //
@@ -583,13 +643,13 @@ public class btlevelup {
         }
     }
     
-    public static void width(TreeNode root, int hl, int[] minmaxhl) {
+    public static void width4(TreeNode root, int hl, int[] minmaxhl) {
         if(root == null) return;
         
         minmaxhl[0] = Math.min(minmaxhl[0], hl);
         minmaxhl[1] = Math.max(minmaxhl[1], hl);
-        width(root.left, hl - 1, minmaxhl);
-        width(root.right, hl + 1, minmaxhl);
+        width4(root.left, hl - 1, minmaxhl);
+        width4(root.right, hl + 1, minmaxhl);
     }
     
     //Function to return a list containing the bottom view of the given tree.
@@ -597,7 +657,7 @@ public class btlevelup {
     {
         int[] minmaxhl = new int[2];
         
-        width(root, 0, minmaxhl);
+        width4(root, 0, minmaxhl);
         int w = minmaxhl[1] - minmaxhl[0] + 1;
         
         ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
@@ -681,5 +741,211 @@ public class btlevelup {
         }
         
         return ans;
+    }
+
+    //vertical order sum
+    public static class Pair8{
+        TreeNode node;
+        int hl;
+        
+        Pair8(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+    
+    public static void width3(TreeNode root, int hl, int[] minmaxhl) {
+        if(root == null) return;
+        
+        minmaxhl[0] = Math.min(minmaxhl[0], hl);
+        minmaxhl[1] =Math.max(minmaxhl[1], hl);
+        
+        width3(root.left, hl - 1, minmaxhl);
+        width3(root.right, hl + 1, minmaxhl);
+    }
+    
+    public static ArrayList <Integer> verticalOrderSum(TreeNode root) {
+        
+        int[] minmaxhl = new int[2];
+        width3(root, 0, minmaxhl);
+        
+        int w = minmaxhl[1] - minmaxhl[0] + 1;
+        
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        for(int i = 0; i < w; i++) {
+            ans.add(new ArrayList<>());
+        }
+        
+        Queue<Pair8> q = new ArrayDeque<>();
+        q.add(new Pair8(root, -minmaxhl[0]));
+        
+        while(q.size() != 0) {
+            Pair8 rm = q.remove();
+            
+            ans.get(rm.hl).add(rm.node.val);
+            
+            if(rm.node.left != null) q.add(new Pair8(rm.node.left, rm.hl - 1));
+            if(rm.node.right != null) q.add(new Pair8(rm.node.right, rm.hl + 1));
+            
+        }
+        
+        ArrayList<Integer> sum = new ArrayList<>();
+        
+        for(ArrayList<Integer> list : ans) {
+            int s = 0;
+            for(int ele : list) {
+                s += ele;
+            }
+            sum.add(s);
+        }
+        
+        return sum;
+    }
+
+    public static class Pair12{
+        TreeNode node;
+        int hl;
+        
+        Pair12(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+    
+    public static void width5(TreeNode root, int hl, int[] minmaxhl) {
+        if(root == null) return;
+        
+        minmaxhl[0] = Math.min(minmaxhl[0], hl);
+        minmaxhl[1] =Math.max(minmaxhl[1], hl);
+        
+        width5(root.left, hl - 1, minmaxhl);
+        width5(root.right, hl + 1, minmaxhl);
+    }
+    
+    public static ArrayList <Integer> verticalOrderSum2(TreeNode root) {
+        
+        int[] minmaxhl = new int[2];
+        width5(root, 0, minmaxhl);
+        
+        int w = minmaxhl[1] - minmaxhl[0] + 1;
+        
+        ArrayList<Integer> sum = new ArrayList<>();
+        
+        for(int i = 0; i < w; i++) {
+            sum.add(0);
+        }
+        
+        Queue<Pair12> q = new ArrayDeque<>();
+        q.add(new Pair12(root, -minmaxhl[0]));
+        
+        while(q.size() != 0) {
+            Pair12 rm = q.remove();
+            
+            int s = sum.get(rm.hl);
+            sum.set(rm.hl, s + rm.node.val);
+            
+            if(rm.node.left != null) q.add(new Pair12(rm.node.left, rm.hl - 1));
+            if(rm.node.right != null) q.add(new Pair12(rm.node.right, rm.hl + 1));
+            
+        }
+        
+        return sum;
+    }
+
+    //vertical order sum using dfs approach without hashmap, arraylist
+
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode prev;
+        
+        ListNode() {
+            
+        }
+        
+        ListNode(int val) {
+            this.val = val;
+        }
+    }
+    public static void helper(TreeNode root, ListNode node) {
+        node.val += root.val;
+        //if(node == null) return;
+        
+        if(root.left != null) {
+            if(node.prev == null) {
+                //add first in linkedlist
+                ListNode nn = new ListNode(0);
+                nn.next = node;
+                node.prev = nn; 
+            }
+            //call to left
+            helper(root.left, node.prev);
+        }
+        
+        if(root.right != null) {
+            if(node.next == null) {
+                //add last in linked list
+                ListNode nn = new ListNode(0);
+                nn.prev = node;
+                node.next = nn;
+            }
+            helper(root.right, node.next);
+        }
+        
+    }
+
+    public static ArrayList<Integer> verticalOrderSum3(TreeNode root) {
+        ListNode dummy = new ListNode(0);
+        helper(root, dummy);
+        
+        ArrayList<Integer> ans = new ArrayList<>();
+        
+        ListNode curr = dummy;
+        while(curr.prev != null) curr = curr.prev;
+
+        while(curr != null) {
+            ans.add(curr.val);
+            curr = curr.next;
+        }
+        
+        return ans;
+    }
+
+    //diagonal order sum of binary tree
+    public static ArrayList <Integer> diagonalOrderSum(TreeNode root) 
+    {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        Queue<TreeNode> q = new ArrayDeque<>();
+        
+        q.add(root);
+        
+        while(q.size()!= 0) {
+            int sz = q.size();
+            ArrayList<Integer> diag = new ArrayList<>();
+            while(sz-->0) {
+                TreeNode rm = q.remove();
+                
+                while(rm != null) {
+                    if(rm.left != null) {
+                        q.add(rm.left);
+                    }
+                    diag.add(rm.val);
+                    
+                    rm = rm.right;
+                }
+            }
+            ans.add(diag);
+        }
+        
+        ArrayList<Integer> sum = new ArrayList<>();
+        for(ArrayList<Integer> list : ans) {
+            int s = 0;
+            for(int ele : list) {
+                s += ele;
+            }
+            sum.add(s);
+        }
+        
+        return sum;
     }
 }
