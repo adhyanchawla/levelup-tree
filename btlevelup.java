@@ -948,4 +948,57 @@ public class btlevelup {
         
         return sum;
     }
+
+    //recursive manner
+    public static void dos_helper(TreeNode root, int lvl, ArrayList <Integer> ans){
+        if(lvl < ans.size()) {
+            int s = ans.get(lvl);
+            ans.set(lvl, s + root.val);
+        } else {
+            ans.add(root.val);   
+        }
+        
+        
+        if(root.left != null) dos_helper(root.left, lvl + 1, ans);
+        if(root.right != null) dos_helper(root.right, lvl, ans);
+        
+    }
+    
+    public static ArrayList <Integer> diagonalOrderSum2(TreeNode root) {
+        ArrayList <Integer> ans = new ArrayList<>();
+        
+        dos_helper(root, 0, ans);
+        return ans;
+    }
+
+    //root to all leaf paths
+    //void type
+    public static void helper(TreeNode root, ArrayList<ArrayList<Integer>> res, ArrayList<Integer> ans) {
+        if(root == null) return;
+        if(root.left == null && root.right == null) {
+            ans.add(root.val);
+            ArrayList<Integer> base = new ArrayList<>();
+            res.add(new ArrayList<>(ans));
+            ans.remove(ans.size() - 1); //last wale ko remove krna hoga kyuki isko issi case mei add krra
+            return;
+        }
+        
+        ans.add(root.val);
+        
+        helper(root.left, res, ans);
+        helper(root.right, res, ans);
+  
+        ans.remove(ans.size() - 1);
+        
+    }
+  
+    public static ArrayList<ArrayList<Integer>> rootToAllLeafPath(TreeNode root) {
+      ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+      ArrayList<Integer> ans = new ArrayList<>();
+      
+      helper(root, res, ans);
+      return res;
+    }
+
+    //can be done using return type
 }
