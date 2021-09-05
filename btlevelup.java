@@ -571,7 +571,6 @@ public class btlevelup {
     }
 
     //top view of binary tree
-    //
     public static class Pair5 {
         TreeNode node;
         int hl;
@@ -977,7 +976,6 @@ public class btlevelup {
         if(root == null) return;
         if(root.left == null && root.right == null) {
             ans.add(root.val);
-            ArrayList<Integer> base = new ArrayList<>();
             res.add(new ArrayList<>(ans));
             ans.remove(ans.size() - 1); //last wale ko remove krna hoga kyuki isko issi case mei add krra
             return;
@@ -1001,4 +999,100 @@ public class btlevelup {
     }
 
     //can be done using return type
+
+    //cameras in binary tree
+    static int cams;
+    
+    public static int cameras(TreeNode root) {
+        if(root == null) return 2;
+        
+        int lc = cameras(root.left);
+        int rc = cameras(root.right);
+        
+        if(lc == 0 || rc == 0) {
+            cams++;
+            return 1;
+        } else if(lc == 1 || rc == 1) {
+            return 2;
+        } else {
+            return 0;
+        }
+        
+    }
+    
+    public static int MinCamerasInBT(TreeNode root) {
+        cams = 0;
+        int state = cameras(root);
+        if(state == 0) cams++;
+        return cams;
+    }
+
+    //house robber
+    public static class Pair15 {
+        int i;
+        int e;
+        
+        Pair15(int i, int e) {
+            this.i = i;
+            this.e = e;
+        }
+    }
+    public static Pair15 helper5(TreeNode root) {
+        if(root == null) return new Pair15(0, 0);
+        
+        Pair15 lp = helper5(root.left);
+        Pair15 rp = helper5(root.right);
+        
+        int inc = root.val + lp.e + rp.e; //inclusion
+        int exc = Math.max(lp.i, lp.e) + Math.max(rp.i, rp.e); //exclusion
+        Pair15 mp = new Pair15(inc, exc);
+        
+        return mp;
+            
+    }
+    
+    public static int HouseRobber(TreeNode root) {
+        Pair15 h = helper5(root);
+        return Math.max(h.i, h.e);
+    }
+
+    //longest zig  zag path in binary tree
+    public class Pair16 {
+        int lzzp;
+        int rzzp;
+        int mzzp;
+        
+        Pair16(int lzzp, int rzzp,int mzzp) {
+            this.lzzp = lzzp;
+            this.rzzp = rzzp;
+            this.mzzp = mzzp;
+        }
+    }
+    
+    public Pair16 MZP(TreeNode root) {
+        if(root == null) return new Pair16(-1, -1, 0);
+        
+        Pair16 lp = MZP(root.left);
+        Pair16 rp = MZP(root.right);
+        
+        int lzzp = lp.rzzp + 1;
+        int rzzp = rp.lzzp + 1;
+        
+        int mzzp = max(lp.mzzp, rp.mzzp, lzzp, rzzp);
+        
+        Pair16 mp = new Pair16(lzzp, rzzp, mzzp);
+        return mp;
+    }
+    
+    public int max(int a, int b, int c, int d) {
+        int c1 = Math.max(a, b);
+        int c2 = Math.max(c, d);
+        
+        return Math.max(c1, c2);
+    }
+    
+    public int longestZigZag(TreeNode root) {
+        Pair16 p = MZP(root);
+        return p.mzzp;
+    }
 }
