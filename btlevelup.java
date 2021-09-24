@@ -1095,4 +1095,247 @@ public class btlevelup {
         Pair16 p = MZP(root);
         return p.mzzp;
     }
+
+
+    //IS VALID BST
+    static TreeNode prev;
+    public boolean helper(TreeNode root) {
+        if(root == null) return true;
+        
+        boolean lans = helper(root.left);
+        if(!lans) return false;
+        
+        if(prev != null && prev.val >= root.val) {
+            return false;
+        } 
+        
+        prev = root;
+        
+        boolean rans = helper(root.right);
+        if(!rans) return false;
+        
+        return true;
+    }
+    
+    public boolean isValidBST(TreeNode root) {
+        prev = null;
+        return helper(root);
+    }
+
+    //recover tree
+    static TreeNode firstEle;
+    static TreeNode secEle;
+    static TreeNode prevEle;
+    public static void helper11(TreeNode root) {
+        
+        if(root == null) return;
+        
+        helper11(root.left);
+        
+        if(firstEle == null && prevEle != null && prevEle.val >= root.val) {
+            firstEle = prevEle;
+        }
+        
+        if(firstEle != null && prevEle.val >= root.val) {
+            secEle = root;
+        }
+        
+        prevEle = root;
+        
+        helper11(root.right);
+    }
+    
+    public static void recoverTree(TreeNode root) {
+        prevEle = null;
+        firstEle = null;
+        secEle = null;
+        
+        helper11(root);   
+        
+        int val = firstEle.val;
+        firstEle.val = secEle.val;
+        secEle.val = val;
+    }
+
+    //max path sum from any node to any node using static variable
+    public static int max(int...arr) {
+        int omax = -(int)1e9;
+        for(int ele : arr) {
+            omax = Math.max(omax, ele);
+        }
+        return omax;
+    }
+    
+    public static int helper20(TreeNode root) {
+        if(root == null) {
+            return 0;
+        }
+        else if(root.left == null && root.right == null) {
+            n2nmps = max(root.val, n2nmps);
+            return root.val;
+        }
+        
+        int lans = helper20(root.left);
+        int rans = helper20(root.right);
+        
+        int f1 = lans + root.val;
+        int f2 = rans + root.val;
+        int f3 = lans + root.val + rans;
+        int f4 = root.val;
+        
+        int r2nmps = max(f1, f2, f4);
+        n2nmps = max(n2nmps, f1, f2, f3, f4, f1 + f2 - f4);
+        
+        return r2nmps;
+    }
+    
+    
+    static int n2nmps;
+    public static int maxPathSum(TreeNode root) {
+        if(root.left == null && root.right == null) return root.val;
+        
+        n2nmps = -(int)1e9;
+        int ans = helper20(root);
+        return Math.max(ans, n2nmps);
+    }
+
+    //max path sum from any node to any node using pair class
+    public class Pair50 {
+        int r2nmps;
+        int n2nmps;
+        
+        Pair50(int r2nmps, int n2nmps) {
+            this.r2nmps = r2nmps;
+            this.n2nmps = n2nmps;
+        }
+        
+        Pair50() {
+            
+        }
+    }
+    
+    
+    public int max1(int...arr) {
+        int omax = -(int)1e9;
+        for(int val : arr) {
+            if(val > omax) {
+                omax = val;
+            }
+        }
+        return omax;
+    }
+    
+    public Pair50 helper22(TreeNode root) {
+        
+        if(root == null) {
+            return new Pair50(0, -(int)1e9);
+        } else if(root.left == null && root.right == null) {
+            return new Pair50(root.val, root.val);
+        }
+        
+        Pair50 lp = helper22(root.left);
+        Pair50 rp = helper22(root.right);
+        
+        int f1 = lp.r2nmps + root.val; //root to left subtree max path sum
+        int f2 = rp.r2nmps + root.val; //root to right subtree max path sum
+        int f3 = lp.r2nmps + root.val + rp.r2nmps; //left subtree to right subtree node
+        int f4 = root.val;
+        
+        int r2nmps = max1(f1, f2, f4);
+        int n2nmps = max1(f1, f2, f3, f4, lp.n2nmps, rp.n2nmps);
+        
+        return new Pair50(r2nmps, n2nmps);
+        
+    }
+    
+    public int maxPathSum3(TreeNode root) {
+        Pair50 ans = helper22(root);
+        return ans.n2nmps;
+    }
+    
+    //max path sum between two leaves using static
+    //returns n2lmps
+    public int helper21(TreeNode root) {
+        if(root == null) {
+            return -(int)1e9;
+        }
+        
+        if(root.left == null && root.right == null) {
+            return root.val;
+        }
+        
+        int la = helper21(root.left);
+        int ra = helper21(root.right);
+        
+        int factor = -(int)1e9;
+        
+        if(root.left != null && root.right != null) {
+            factor = la + ra + root.val;
+        }
+        
+        l2lmps = Math.max(factor, l2lmps);
+        
+        int n2lmps = Math.max(la, ra) + root.val;
+        return n2lmps;
+    }
+    
+    static int l2lmps;
+    int maxPathSum2(TreeNode root)
+    { 
+        l2lmps = -(int)1e9;
+        
+        int n2l = helper21(root);
+        if((root.left != null && root.right == null) || (root.left == null && root.right != null)) {
+            return Math.max(n2l, l2lmps);
+        }
+        
+        return l2lmps;
+    }
+    
+    //max path sum between any two leaves in binary tree using pair class
+    public class Pair51 {
+        int n2lmps; //node to leaf max path sum
+        int l2lmps; //leaf to leaf max path sum
+        
+        Pair51(int n2lmps, int l2lmps) {
+            this.n2lmps = n2lmps;
+            this.l2lmps = l2lmps;
+        }
+    }
+    
+    public Pair51 helper23(TreeNode root) {
+        if(root == null) {
+            return new Pair51(-(int)1e9, -(int)1e9);
+        } else if(root.left == null && root.right == null) {
+            return new Pair51(root.val, -(int)1e9);
+        }
+        
+        Pair51 lp = helper23(root.left);
+        Pair51 rp = helper23(root.right);
+        
+        int n2lmps = Math.max(lp.n2lmps, rp.n2lmps) + root.val;
+        
+        int factor = -(int)1e9;
+        
+        if(root.left != null && root.right != null) {
+            factor = lp.n2lmps + rp.n2lmps + root.val;
+        } 
+        
+        int l2lmps = Math.max(factor, Math.max(lp.l2lmps, rp.l2lmps));
+        
+        Pair51 mp = new Pair51(n2lmps, l2lmps);
+        return mp;
+    }
+    
+    int maxPathSum4(TreeNode root)
+    {
+        Pair51 ans = helper23(root);
+        
+        if(ans.l2lmps == -(int)1e9) {
+            return ans.n2lmps;
+        }
+        return ans.l2lmps;
+        // code here 
+    } 
+
 }
