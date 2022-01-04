@@ -36,32 +36,50 @@ public class avl {
     }
 
     public static int max(Node node) {
-        if(node == null) return -(int)1e9;
-
-        return Math.max(node.data, max(node.right));
+        if(node.right != null) {
+            return max(node.right);
+        }
+        else {
+            return node.data;
+        }
     }
 
-    public static Node remove(Node node, int data) {
-        if(node == null) return null;
+    public static Node remove(Node node,int data) {
+        if(node == null) {
+            return null;
+        }
 
-        if(node.data > data) {
-            node.left = remove(node.left, data);
-        } else if(node.data < data) {
-            node.right = remove(node.right, data);
-        } else {
-            if(node.left != null && node.right != null) {
+        if(node.data < data) {
+            node.right = remove(node.right,data);
+        }
+        else if(node.data > data) {
+            node.left = remove(node.left,data);
+        }
+        else {
+            //no child
+            if(node.left == null && node.right == null) {
+                return null;
+            }
+            //only right child
+            else if(node.left == null) {
+                return node.right;
+            }
+            //only left child
+            else if(node.right == null) {
+                return node.left;
+            }
+            //both child
+            else {
                 int lmax = max(node.left);
                 node.data = lmax;
-                node.left = remove(node.left, lmax);
-                return node;
-            } else if(node.left != null) {
-                return node.left;
-            } else if(node.right != null) {
-                return node.right;
-            } else return null;
+                node.left = remove(node.left,lmax);
+            }
+
         }
 
         updateHtAndBal(node);
+
+        //if bal is safe or not
         node = check(node);
 
         return node;
@@ -158,6 +176,8 @@ public class avl {
             root = add(root, arr[i]);
         }
 
+        root = remove(root, 10);
+        root = remove(root, 20);
         display(root);
     }
 }
